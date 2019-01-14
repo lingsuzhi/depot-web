@@ -46,22 +46,13 @@ let data = () => {
   }
 }
 
-let getDashboardChart = function() {
-  this.$http.get('/getDashboardChart').then(res => {
-    if (!res.data || !res.data.success)
-      return
-      console.log(res.data.data)
-    this.model = res.data.data
-  })
-}
-
 export default {
   data: data,
   methods: {
-    getDashboardChart
+
   },
   mounted: function() {
-    this.getDashboardChart()
+
   }
 }
 </script>

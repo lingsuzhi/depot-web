@@ -8,26 +8,34 @@
         <el-table :data="sheet.rows" highlight-current-row v-loading="sheet.loading" stripe="stripe" border="border"
                   @sort-change="sortChange" style="width: 100%;" max-height="690">
 
-<el-table-column prop="account" label="账号" min-width="160" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
+          <el-table-column prop="account" label="账号" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
 
-<el-table-column prop="name" label="名称" min-width="160" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
+          <el-table-column prop="name" label="名称" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
 
-<el-table-column prop="role" label="角色" min-width="160" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
+          <el-table-column prop="role" label="角色" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
 
-<el-table-column prop="sex" label="性别" min-width="160" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
+          <el-table-column prop="sex" label="性别" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
 
-<el-table-column prop="phone" label="手机" min-width="160" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
+          <el-table-column prop="phone" label="手机" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
 
-<el-table-column prop="registerDate" label="注册时间" width="200" align="center" sortable="sortable" :show-overflow-tooltip="true">
-<template slot-scope="scope">
-<el-icon name="time"></el-icon>
-<span style="margin-left: 10px">{{ formatDate(scope.row.registerDate) }}</span>
-</template>
-</el-table-column>
+          <el-table-column prop="registerDate" label="注册时间" width="200" align="center" sortable="sortable"
+                           :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <el-icon name="time"></el-icon>
+              <span style="margin-left: 10px">{{ formatDate(scope.row.registerDate) }}</span>
+            </template>
+          </el-table-column>
 
-<el-table-column prop="googleKey" label="谷歌验证" min-width="160" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
+          <el-table-column prop="googleKey" label="谷歌验证" min-width="160" sortable="sortable"
+                           :show-overflow-tooltip="true" header-align="center"/>
 
-<el-table-column prop="remark" label="备注" min-width="160" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
+          <el-table-column prop="remark" label="备注" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
 
           <el-table-column label="操作" fixed="right" width="120" align="center" :show-overflow-tooltip="true">
             <template slot-scope="scope">
@@ -136,6 +144,9 @@
         this.$refs.memberInfoEdit.showAdd();
       },
       formatDate: function (d, format) {
+        if (!d) {
+          return "";
+        }
         if (!format) {
           format = 'YYYY-MM-DD HH:mm:ss';
         }

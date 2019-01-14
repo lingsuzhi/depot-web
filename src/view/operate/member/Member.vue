@@ -144,7 +144,10 @@
         if (!format) {
           format = 'YYYY-MM-DD HH:mm:ss';
         }
-        return this.$moment(d).format(format)
+        if (!d) {
+          return "";
+        }
+          return this.$moment(d).format(format)
       },
       getList,
       sortChange: function (d) {

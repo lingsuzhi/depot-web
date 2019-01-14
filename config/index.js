@@ -14,7 +14,7 @@ module.exports = {
       '/api': {
         // target: 'http://localhost:18050',
         // target: 'http://192.168.0.226:18050',
-        target: 'http://localhost:8666',
+        target: 'http://localhost:8888',
         // target: 'http://192.168.0.13:18050',
         // target: 'http://120.78.145.165:18050',
         // target: 'http://120.78.145.165:18050',

@@ -115,6 +115,9 @@
         this.$refs.【lName】Edit.showAdd();
       },
       formatDate: function (d, format) {
+        if(!d){
+          return "";
+        }
         if (!format) {
           format = 'YYYY-MM-DD HH:mm:ss';
         }
