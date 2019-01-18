@@ -3,7 +3,7 @@
     <el-form :inline="true" v-model="filters">
       
 <el-form-item>
-  <el-input v-model="filters.account" placeholder="账号" clearable></el-input>
+  <el-input v-model="filters.number" placeholder="编号" clearable></el-input>
 </el-form-item>
 
 <el-form-item>
@@ -11,40 +11,11 @@
 </el-form-item>
 
 <el-form-item>
-<el-select v-model="filters.role" placeholder="角色">
-<el-option
-:label="''"
-:value="null">
-</el-option>
-<el-option
-:value="'管理员'">
-</el-option>
-<el-option
-:value="'操作员'">
-</el-option>
-<el-option
-:value="'来宾'">
-</el-option>
-</el-select>
+  <el-input v-model="filters.spec" placeholder="规格" clearable></el-input>
 </el-form-item>
 
 <el-form-item>
-<el-select v-model="filters.sex" placeholder="性别">
-<el-option
-:label="''"
-:value="null">
-</el-option>
-<el-option
-:value="'男'">
-</el-option>
-<el-option
-:value="'女'">
-</el-option>
-</el-select>
-</el-form-item>
-
-<el-form-item>
-  <el-input v-model="filters.phone" placeholder="手机" clearable></el-input>
+  <el-input v-model="filters.type" placeholder="类别" clearable></el-input>
 </el-form-item>
 
       <el-form-item>

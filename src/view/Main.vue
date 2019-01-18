@@ -453,7 +453,7 @@
       }
       .content-container {
         flex: 1;
-        /*overflow-y: scroll;*/
+        overflow-y: scroll;
         padding: 20px;
         .breadcrumb-container {
           .title {

@@ -19,6 +19,7 @@ prop="name"
 <el-form-item label="角色">
 <el-select v-model="row.role">
 <el-option :value="'管理员'"></el-option>
+<el-option :value="'操作员'"></el-option>
 <el-option :value="'来宾'"></el-option>
 </el-select>
 </el-form-item>
@@ -55,7 +56,7 @@ prop="name"
       visible: false,
       row: {},
       oldRow: {},
-      isChenge: false
+      isChange: false
     }
   }
   export default {
@@ -66,11 +67,14 @@ prop="name"
         this.oldRow = row;
         this.row = JSON.parse(JSON.stringify(row));
         this.visible = true;
+        this.isChange = false;
       },
       showAdd: function () {
         this.isAdd = true;
         this.visible = true;
         this.oldRow = null;
+        this.isChange = false;
+
         this.row = {
               role: '来宾',
     sex: '男',
@@ -82,7 +86,7 @@ prop="name"
       },
       hideDo: function () {
         this.isAdd = false;
-        if (this.isChenge && this.oldRow) {
+        if (this.isChange && this.oldRow) {
           for (let item in this.oldRow) {
             let val = this.row[item];
             this.oldRow[item] = val;
@@ -105,6 +109,7 @@ prop="name"
         let param = this.row;
         let vm = this;
         let url = this.isAdd ? '/base/memberInfo/addNew' : '/base/memberInfo/update';
+
         vm.$http.post(url, param).then(res => {
           if (!res.data.success) {
             vm.$message({
@@ -114,7 +119,7 @@ prop="name"
             });
             return
           }
-          vm.isChenge = true;
+          vm.isChange = true;
           vm.$message({
             type: 'success',
             message: '保存成功!'

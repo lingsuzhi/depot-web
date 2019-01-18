@@ -19,6 +19,7 @@ prop="name"
 <el-form-item label="角色">
 <el-select v-model="row.role">
 <el-option :value="'管理员'"></el-option>
+<el-option :value="'操作员'"></el-option>
 <el-option :value="'来宾'"></el-option>
 </el-select>
 </el-form-item>

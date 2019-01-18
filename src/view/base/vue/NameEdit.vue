@@ -21,7 +21,7 @@
       visible: false,
       row: {},
       oldRow: {},
-      isChenge: false
+      isChange: false
     }
   }
   export default {
@@ -32,11 +32,14 @@
         this.oldRow = row;
         this.row = JSON.parse(JSON.stringify(row));
         this.visible = true;
+        this.isChange = false;
       },
       showAdd: function () {
         this.isAdd = true;
         this.visible = true;
         this.oldRow = null;
+        this.isChange = false;
+
         this.row = {
           【addInit】
       }
@@ -46,7 +49,7 @@
       },
       hideDo: function () {
         this.isAdd = false;
-        if (this.isChenge && this.oldRow) {
+        if (this.isChange && this.oldRow) {
           for (let item in this.oldRow) {
             let val = this.row[item];
             this.oldRow[item] = val;
@@ -69,6 +72,7 @@
         let param = this.row;
         let vm = this;
         let url = this.isAdd ? '/base/【lName】/addNew' : '/base/【lName】/update';
+
         vm.$http.post(url, param).then(res => {
           if (!res.data.success) {
             vm.$message({
@@ -78,7 +82,7 @@
             });
             return
           }
-          vm.isChenge = true;
+          vm.isChange = true;
           vm.$message({
             type: 'success',
             message: '保存成功!'

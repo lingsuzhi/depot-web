@@ -6,7 +6,7 @@
       </el-header>
       <el-main>
         <el-table :data="sheet.rows" highlight-current-row v-loading="sheet.loading" stripe="stripe" border="border"
-                  @sort-change="sortChange" style="width: 100%;" max-height="690">
+                  @sort-change="sortChange" style="width: 100%;" max-height="690" :row-style="tableRowStyle">
 【tableColumn】
           <el-table-column label="操作" fixed="right" width="120" align="center" :show-overflow-tooltip="true">
             <template slot-scope="scope">
@@ -81,6 +81,11 @@
       },
       handleCommand: function (param) {
         this[param.method](param.args)
+      },
+      tableRowStyle({row, rowIndex}) {
+        if (row.color){
+          return 'color: ' + row.color;
+        }
       },
       kill【uName】Info: function (row) {
         let vm = this;

@@ -31,10 +31,10 @@ import {
 OperateRouter.forEach(item => routes.push(item))
 
 import {
-  Router as OperateRouter2
-} from './operate2'
+  Router as ProductRouter
+} from './product'
 
-OperateRouter2.forEach(item => routes.push(item))
+ProductRouter.forEach(item => routes.push(item))
 
 const router = new Router({
   routes: routes,

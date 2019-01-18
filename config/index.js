@@ -14,7 +14,7 @@ module.exports = {
       '/api': {
         // target: 'http://localhost:18050',
         // target: 'http://192.168.0.226:18050',
-        target: 'http://localhost:8888',
+        target: 'http://localhost:8666',
         // target: 'http://192.168.0.13:18050',
         // target: 'http://120.78.145.165:18050',
         // target: 'http://120.78.145.165:18050',
@@ -27,7 +27,7 @@ module.exports = {
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8555, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,

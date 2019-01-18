@@ -14,7 +14,11 @@
 
 <el-table-column prop="role" label="角色" min-width="160" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
 
-<el-table-column prop="sex" label="性别" min-width="160" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
+<el-table-column prop = "sex" label = "性别" width = "120" align = "center" >
+  <template slot-scope = "scope" >
+    <el-tag :type = "scope.row.sex=='男'?'success':'info'" > {{scope.row.sex=='男' ? '男' : '女'}} </el-tag>
+  </template >
+</el-table-column>
 
 <el-table-column prop="phone" label="手机" min-width="160" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
 
@@ -136,6 +140,9 @@
         this.$refs.memberInfoEdit.showAdd();
       },
       formatDate: function (d, format) {
+        if(!d){
+          return "";
+        }
         if (!format) {
           format = 'YYYY-MM-DD HH:mm:ss';
         }

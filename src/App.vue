@@ -28,7 +28,7 @@ export default {
 }
 
 .el-aside {
-  background-color: #D3DCE6;
+  /*background-color: #f2f2f2;*/
   color: #333;
   text-align: center;
 
