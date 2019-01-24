@@ -5,36 +5,17 @@
     <el-form ref="form" :model="row" label-width="80px" align="left">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="编号"
-                        prop="number"
-                        :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
-            <el-input v-model="row.number" :disabled="!isAdd"/>
+          <el-form-item label="类别">
+            <el-input v-model="row.type" placeholder="请输入">
+              <el-button slot="append" @click="typeVisible=true" icon="el-icon-search"></el-button>
+            </el-input>
           </el-form-item>
+
 
           <el-form-item label="名称"
                         prop="name"
                         :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <el-input v-model="row.name" placeholder="请输入"/>
-          </el-form-item>
-
-
-          <el-form-item label="条形码">
-            <el-input v-model="row.barcode" placeholder="请输入"/>
-          </el-form-item>
-
-          <el-form-item label="生产厂家">
-            <el-input v-model="row.manufacturer" placeholder="请输入"/>
-          </el-form-item>
-
-        </el-col>
-
-        <el-col :span="12">
-          <el-form-item label="规格">
-            <el-input v-model="row.spec" placeholder="请输入"/>
-          </el-form-item>
-
-          <el-form-item label="含量">
-            <el-input v-model="row.content" placeholder="请输入"/>
           </el-form-item>
 
           <el-form-item label="单位">
@@ -45,8 +26,27 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="类别">
-            <el-input v-model="row.type" placeholder="请输入"/>
+          <el-form-item label="生产厂家">
+            <el-input v-model="row.manufacturer" placeholder="请输入"/>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="12">
+          <el-form-item label="编号"
+                        prop="number"
+                        :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
+            <el-input v-model="row.number" :disabled="!isAdd"/>
+          </el-form-item>
+          <el-form-item label="规格">
+            <el-input v-model="row.spec" placeholder="请输入"/>
+          </el-form-item>
+
+          <el-form-item label="含量">
+            <el-input v-model="row.content" placeholder="请输入"/>
+          </el-form-item>
+
+          <el-form-item label="条形码">
+            <el-input v-model="row.barcode" placeholder="请输入"/>
           </el-form-item>
 
         </el-col>
@@ -98,9 +98,6 @@
             <el-input-number v-model="row.sort" placeholder="请输入"/>
           </el-form-item>
 
-
-
-
           <el-form-item label="图片">
 
             <el-upload
@@ -117,21 +114,28 @@
       </el-row>
 
 
-
       <el-form-item>
         <el-button icon="el-icon-edit" type="primary" @click="submitForm">提交</el-button>
         <el-button icon="el-icon-delete" @click="hide()">取消</el-button>
       </el-form-item>
     </el-form>
+
+    <el-dialog :width="'300px'" :visible.sync="typeVisible" @dblclick.native="closeTypeFrm" title="双击选择"
+               :show-close="false" :modal-append-to-body="false" :append-to-body="true">
+      <productTypeInfoTree ref="productTypeInfoTree" :handleNodeClick="handleNodeClick"/>
+    </el-dialog>
   </el-dialog>
 
 </template>
 
 <script>
+  import ProductTypeInfoTree from '@/view/product/producttypeinfo/ProductTypeInfoTree.vue';
+
   let data = () => {
     return {
       isAdd: false,
       visible: false,
+      typeVisible: false,
       row: {},
       oldRow: {},
       isChange: false
@@ -140,12 +144,26 @@
   export default {
     data: data,
     props: ['search'],
+    components: {
+      ProductTypeInfoTree,
+    },
     methods: {
+      closeTypeFrm: function () {
+        this.typeVisible = false;
+      },
       show: function (row) {
         this.oldRow = row;
         this.row = JSON.parse(JSON.stringify(row));
         this.visible = true;
         this.isChange = false;
+      },
+      getNewNumber: function (type) {
+        this.$http.get("/product/findMaxNumber", {
+          params: {type : type}}).then(res => {
+          if (res.data.success) {
+            this.$set(this.row, 'number', res.data.data);
+          }
+        });
       },
       showAdd: function () {
         this.isAdd = true;
@@ -155,7 +173,16 @@
 
         this.row = {
           company: '箱',
-          status : true
+          status: true
+        }
+
+        this.getNewNumber('');
+      },
+      handleNodeClick(data) {
+        this.$set(this.row, 'type', data.label)
+
+        if (this.isAdd){
+          this.getNewNumber(data.label);
         }
       },
       hide: function () {
@@ -183,7 +210,7 @@
         });
       },
       handleAvatarSuccess(res, file) {
-        if (res.success){
+        if (res.success) {
           this.$set(this.row, 'image', res.data)
 
         }
@@ -198,7 +225,7 @@
         if (!isLt2M) {
           this.$message.error('上传图片大小不能超过 2MB!');
         }
-        return  isLt2M;
+        return isLt2M;
       },
       onSubmit: function () {
         let param = this.row;
@@ -235,9 +262,11 @@
     position: relative;
     overflow: hidden;
   }
+
   .avatar-uploader .el-upload:hover {
     border-color: #409EFF;
   }
+
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
@@ -246,6 +275,7 @@
     line-height: 178px;
     text-align: center;
   }
+
   .avatar {
     width: 178px;
     height: 178px;

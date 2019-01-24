@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" >
     <router-view/>
   </div>
 </template>
@@ -39,11 +39,14 @@ export default {
   height: 60px;
   position: absolute;
   width: 85%;
-  bottom: 10px;
+  bottom: 7px;
 }
 .el-main {
   text-align: center;
-  padding: 15px 0px;
+  padding-left: 0px;
+  padding-top:  0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
 }
 
 </style>

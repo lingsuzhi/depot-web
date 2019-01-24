@@ -27,14 +27,17 @@ let routes = [{
 import {
   Router as OperateRouter
 } from './operate'
-
 OperateRouter.forEach(item => routes.push(item))
 
 import {
   Router as ProductRouter
 } from './product'
-
 ProductRouter.forEach(item => routes.push(item))
+
+import {
+  Router as SystemRouter
+} from './system'
+SystemRouter.forEach(item => routes.push(item))
 
 const router = new Router({
   routes: routes,

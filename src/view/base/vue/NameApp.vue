@@ -8,6 +8,15 @@
         <el-table :data="sheet.rows" highlight-current-row v-loading="sheet.loading" stripe="stripe" border="border"
                   @sort-change="sortChange" style="width: 100%;" max-height="690" :row-style="tableRowStyle">
 【tableColumn】
+
+          <el-table-column prop="createDate" label="时间" width="200" align="center" sortable="sortable"
+                           :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <el-icon name="time"></el-icon>
+              <span style="margin-left: 10px">{{ formatDate(scope.row.createDate) }}</span>
+            </template>
+          </el-table-column>
+
           <el-table-column label="操作" fixed="right" width="120" align="center" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <el-dropdown @command="handleCommand">

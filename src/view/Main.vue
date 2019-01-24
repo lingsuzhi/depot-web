@@ -8,10 +8,11 @@
 <template>
   <el-row class="container">
     <el-col :span="24" class="header">
-      <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'" >
+      <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
 
         <i class="fa fa-chevron-circle-right" style="font-size: 20px" v-show="collapsed" @click.prevent="collapse"></i>
-        <span  @click.prevent="collapse">{{collapsed?'':sysName}} <i class="fa fa-list-ul" style="font-size: 20px;margin-left: 3px"></i></span>
+        <span @click.prevent="collapse">{{collapsed?'':sysName}} <i class="fa fa-list-ul"
+                                                                    style="font-size: 20px;margin-left: 3px"></i></span>
       </el-col>
       <el-col :span="4">
 
@@ -38,7 +39,8 @@
             <el-submenu :index="index+''"
                         v-if="!item.leaf">
               <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-              <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">
+              <el-menu-item v-for="child in item.children" :index="getIndex(child)" :key="child.path"
+                            v-if="!child.hidden">
                 {{child.name}}
               </el-menu-item>
             </el-submenu>
@@ -71,60 +73,60 @@
             </template>
             <template v-else>
 
-            <div class="el-submenu__title el-menu-item"
-                 style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;"
-                 :class="$route.path==item.children[0].path?'is-active':''"
-                 @click="$router.push(item.children[0].path)"><i :class="item.iconCls"></i></div>
+              <div class="el-submenu__title el-menu-item"
+                   style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;"
+                   :class="$route.path==item.children[0].path?'is-active':''"
+                   @click="$router.push(item.children[0].path)"><i :class="item.iconCls"></i></div>
 
-</template>
-</li>
-</ul>
-</aside>
-<section class="content-container">
-  <div class="grid-content bg-purple-light">
-    <el-col :span="24" class="breadcrumb-container">
-      <template v-if="$route.path==='/activityCenter/activityList'">
-        <el-button type="primary"
-                   @click="addActivity">添加活动
-        </el-button>
-      </template>
-      <template v-if="!$route.path.includes('/activityCenter')">
-        <strong class="title">{{$route.name}}</strong>
-      </template>
-      <el-breadcrumb separator="/" class="breadcrumb-inner">
-        <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
-          {{ item.name }}
-        </el-breadcrumb-item>
-      </el-breadcrumb>
-    </el-col>
-    <el-col :span="24" class="content-wrapper">
-      <transition name="fade" mode="out-in">
-        <router-view></router-view>
-      </transition>
-    </el-col>
-  </div>
+            </template>
+          </li>
+        </ul>
+      </aside>
+      <section class="content-container">
+        <div class="grid-content bg-purple-light">
+          <el-col :span="24" class="breadcrumb-container">
+            <template v-if="$route.path==='/activityCenter/activityList'">
+              <el-button type="primary"
+                         @click="addActivity">添加活动
+              </el-button>
+            </template>
+            <template v-if="!$route.path.includes('/activityCenter')">
+              <strong class="title">{{$route.name}}</strong>
+            </template>
+            <el-breadcrumb separator="/" class="breadcrumb-inner">
+              <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
+                {{ item.name }}
+              </el-breadcrumb-item>
+            </el-breadcrumb>
+          </el-col>
+          <el-col :span="24" class="content-wrapper">
+            <transition name="fade" mode="out-in">
+              <router-view></router-view>
+            </transition>
+          </el-col>
+        </div>
 
-</section>
-</el-col>
-<!--form-->
-<el-dialog title="修改密码" :visible.sync="formVisible" :close-on-click-modal="false">
-  <el-form :model="form" label-width="100px" :rules="rules" ref="form">
-    <el-form-item label="旧密码" prop="oldPassword">
-      <el-input type="password" v-model="form.oldPassword" auto-complete="off" placeholder="旧密码"></el-input>
-    </el-form-item>
-    <el-form-item label="新密码" prop="newPassword">
-      <el-input type="password" v-model="form.newPassword" auto-complete="off" placeholder="新密码"></el-input>
-    </el-form-item>
-    <el-form-item label="确认密码" prop="password">
-      <el-input type="password" v-model="form.password" auto-complete="off" placeholder="确认密码"></el-input>
-    </el-form-item>
-  </el-form>
-  <div slot="footer" class="dialog-footer">
-    <el-button @click.native="formVisible = false">取消</el-button>
-    <el-button type="primary" @click.native="submit" :loading="formLoading">提交</el-button>
-  </div>
-</el-dialog>
-</el-row>
+      </section>
+    </el-col>
+    <!--form-->
+    <el-dialog title="修改密码" :visible.sync="formVisible" :close-on-click-modal="false">
+      <el-form :model="form" label-width="100px" :rules="rules" ref="form">
+        <el-form-item label="旧密码" prop="oldPassword">
+          <el-input type="password" v-model="form.oldPassword" auto-complete="off" placeholder="旧密码"></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input type="password" v-model="form.newPassword" auto-complete="off" placeholder="新密码"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="password">
+          <el-input type="password" v-model="form.password" auto-complete="off" placeholder="确认密码"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="formVisible = false">取消</el-button>
+        <el-button type="primary" @click.native="submit" :loading="formLoading">提交</el-button>
+      </div>
+    </el-dialog>
+  </el-row>
 </template>
 
 <script>
@@ -261,11 +263,15 @@
   }
 
   export default {
-    components: {
-
-    },
+    components: {},
     data: data,
     methods: {
+      getIndex(child) {
+        if (child.query) {
+          return child.path + child.query;
+        }
+        return child.path;
+      },
       initMenu,
       change,
       submit,
@@ -326,8 +332,10 @@
     width: 10px !important;
     margin-right: 10px !important;
   }
+
   .el-menu-item {
-    background-color: #EEE  !important;
+    /*菜单颜色*/
+    background-color: #ECF5FF !important;
   }
 
 </style>
@@ -453,7 +461,7 @@
       }
       .content-container {
         flex: 1;
-        overflow-y: scroll;
+        overflow-y: auto;
         padding: 20px;
         .breadcrumb-container {
           .title {

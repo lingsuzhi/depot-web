@@ -3,7 +3,7 @@
 
     <el-container>
       <el-aside width="220px">
-        <productTypeInfoTree ref="productTypeInfoTree" :handleNodeClick="handleNodeClick" :rows="rows"/>
+        <productTypeInfoTree ref="productTypeInfoTree" :handleNodeClick="handleNodeClick"/>
       </el-aside>
       <el-main>
         <el-container>
@@ -13,7 +13,7 @@
           <el-main>
             <el-table :data="sheet.rows" highlight-current-row v-loading="sheet.loading" stripe="stripe" border="border"
                       :row-class-name="tableRowClassName"
-                      @sort-change="sortChange" style="width: 100%;" max-height="670">
+                      @sort-change="sortChange" style="width: 100%;" max-height="700">
 
               <el-table-column prop="name" label="名称" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
                                header-align="center"/>
@@ -51,7 +51,7 @@
     </el-container>
 
 
-    <productTypeInfoEdit ref="productTypeInfoEdit" :search="initTree" :rows="rows"/>
+    <productTypeInfoEdit ref="productTypeInfoEdit" :search="search" :rows="rows"/>
   </section>
 </template>
 
@@ -59,7 +59,7 @@
   import LszPagination from '@/components/common/lsz-pagination.vue';
   import ProductTypeInfoSearch from './ProductTypeInfoSearch.vue';
   import ProductTypeInfoEdit from './ProductTypeInfoEdit.vue';
-  import ProductTypeInfoTree from './ProductTypeInfoTree.vue';
+  import ProductTypeInfoTree from '@/view/product/producttypeinfo/ProductTypeInfoTree.vue';
 
   let data = () => {
     return {
@@ -182,26 +182,13 @@
       tableRowClassName({row, rowIndex}) {
 
         return 'my-row' + row.index;
-      },
-      initTree: function () {
-        this.search();
-        let param = {
-          pageNum: 1,
-          pageSize: 1111111,
-          query: {}
-        }
-        this.$http.post('/base/productTypeInfo/findPage', param).then(res => {
-
-          let response = res.data.data;
-          this.rows = response.content
-        }).catch(() => {
-
-        })
       }
     },
     mounted: function () {
+      setTimeout(() => {
+        this.search();
+      }, 100)
 
-      this.initTree();
     },
     name: "ProductTypeInfo"
   }

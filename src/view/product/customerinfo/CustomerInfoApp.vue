@@ -2,36 +2,42 @@
   <section>
     <el-container>
       <el-header>
-        <lsz-search :search="search" :filters="filters" :add="add"/>
+        <customerInfoSearch :search="search" :filters="filters" :add="add"/>
       </el-header>
       <el-main>
         <el-table :data="sheet.rows" highlight-current-row v-loading="sheet.loading" stripe="stripe" border="border"
-                  @sort-change="sortChange" style="width: 100%;" max-height="690">
-          <el-table-column prop="account" label="账号" width="160" sortable="sortable" :show-overflow-tooltip="true"
-                           header-align="center">
-            <template slot-scope="scope">
-              <span style="color: #409EFF">{{scope.row.account}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="phone" label="手机" width="160" sortable="sortable" :show-overflow-tooltip="true"/>
-          <el-table-column prop="authLevel" label="性别" width="120" align="center">
-            <template slot-scope="scope">
-              <el-tag :type="scope.row.sex?'success':'info'">{{scope.row.sex? '男' : '女'}}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="googleKey" label="谷歌验证" width="120" align="center">
-          </el-table-column>
-          <el-table-column prop="role" label="角色" width="120" align="center">
-          </el-table-column>
-          <el-table-column prop="name" label="姓名" width="160" sortable="sortable" :show-overflow-tooltip="true"/>
-          <el-table-column prop="registerDate" label="注册时间" width="200" align="center" sortable="sortable"
+                  @sort-change="sortChange" style="width: 100%;" max-height="690" :row-style="tableRowStyle">
+
+          <el-table-column prop="number" label="编号" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
+
+          <el-table-column prop="name" label="名称" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
+
+          <el-table-column prop="phone" label="电话" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
+
+          <el-table-column prop="email" label="邮箱" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
+
+          <el-table-column prop="type" label="类别" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
+
+          <el-table-column prop="sort" label="排序" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
+
+          <el-table-column prop="remark" label="备注" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
+                           header-align="center"/>
+
+
+          <el-table-column prop="createDate" label="时间" width="200" align="center" sortable="sortable"
                            :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <el-icon name="time"></el-icon>
-              <span style="margin-left: 10px">{{ formatDate(scope.row.registerDate) }}</span>
+              <span style="margin-left: 10px">{{ formatDate(scope.row.createDate) }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="remark" label="备注" min-width="180" :show-overflow-tooltip="true"/>
+
           <el-table-column label="操作" fixed="right" width="120" align="center" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <el-dropdown @command="handleCommand">
@@ -39,10 +45,8 @@
               <el-button size="small" type="text">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
           </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item :command="{'method':'showMemberInfo','args':scope.row}">编辑</el-dropdown-item>
-                  <el-dropdown-item :command="{'method':'killMemberInfo','args':scope.row}">删除</el-dropdown-item>
-                  <el-dropdown-item :command="{'method':'showMemberLog','args':[scope.row.id,1]}">操作日志
-                  </el-dropdown-item>
+                  <el-dropdown-item :command="{'method':'showCustomerInfoInfo','args':scope.row}">编辑</el-dropdown-item>
+                  <el-dropdown-item :command="{'method':'killCustomerInfoInfo','args':scope.row}">删除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
@@ -52,14 +56,14 @@
       <lsz-pagination :getList="getList" :sheet="sheet"/>
     </el-container>
 
-    <MemberEdit ref="memberEdit"/>
+    <customerInfoEdit ref="customerInfoEdit" :search="search"/>
   </section>
 </template>
 
 <script>
   import LszPagination from '@/components/common/lsz-pagination.vue';
-  import LszSearch from './LszSearch.vue';
-  import MemberEdit from './MemberEdit.vue';
+  import CustomerInfoSearch from './CustomerInfoSearch.vue';
+  import CustomerInfoEdit from './CustomerInfoEdit.vue';
 
   let data = () => {
     return {
@@ -83,7 +87,7 @@
       query: this.filters
     }
     this.sheet.loading = true
-    this.$http.post('/base/memberInfo/findPage', param).then(res => {
+    this.$http.post('/base/customerInfo/findPage', param).then(res => {
 
       let response = res.data.data;
 
@@ -97,8 +101,8 @@
     data: data,
     components: {
       LszPagination,
-      LszSearch,
-      MemberEdit,
+      CustomerInfoSearch,
+      CustomerInfoEdit,
     },
     methods: {
       search: function () {
@@ -108,14 +112,19 @@
       handleCommand: function (param) {
         this[param.method](param.args)
       },
-      killMemberInfo: function (row) {
+      tableRowStyle({row, rowIndex}) {
+        if (row.color) {
+          return 'color: ' + row.color;
+        }
+      },
+      killCustomerInfoInfo: function (row) {
         let vm = this;
         vm.$confirm('是否确认提交?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          vm.$http.get('/base/memberInfo/delByUuid?uuid=' + row.uuid).then(res => {
+          vm.$http.get('/base/customerInfo/delByUuid?uuid=' + row.uuid).then(res => {
             if (!res.data.success) {
               vm.$message({
                 showClose: true,
@@ -131,23 +140,23 @@
             this.search();
           })
         }).catch(() => {
-          //用户点击取消
+
         })
       },
-      showMemberInfo: function (row) {
-        this.$refs.memberEdit.show(row);
+      showCustomerInfoInfo: function (row) {
+        this.$refs.customerInfoEdit.show(row);
       },
       add: function () {
-        this.$refs.memberEdit.showAdd();
+        this.$refs.customerInfoEdit.showAdd();
       },
       formatDate: function (d, format) {
-        if (!format) {
-          format = 'YYYY-MM-DD HH:mm:ss';
-        }
         if (!d) {
           return "";
         }
-          return this.$moment(d).format(format)
+        if (!format) {
+          format = 'YYYY-MM-DD HH:mm:ss';
+        }
+        return this.$moment(d).format(format)
       },
       getList,
       sortChange: function (d) {
@@ -159,9 +168,10 @@
     mounted: function () {
       this.search()
     },
-    name: "Member"
+    name: "CustomerInfo"
   }
 </script>
 
 <style scoped>
 </style>
+
