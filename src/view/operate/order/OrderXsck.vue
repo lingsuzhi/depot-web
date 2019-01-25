@@ -220,8 +220,7 @@
           </el-button>
         </template>
       </el-table-column>
-    </el-table
-      :border="true">
+    </el-table>
     <CustomerSelect ref="customerSelect" :select="customerDo"/>
     <ProductSelect ref="productSelect" :select="productDo"/>
 
