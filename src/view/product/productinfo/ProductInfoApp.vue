@@ -28,7 +28,7 @@
                                :show-overflow-tooltip="true"
                                header-align="center"/>
 
-              <el-table-column prop="company" label="单位" min-width="160" sortable="sortable"
+              <el-table-column prop="company" label="单位" min-width="80" sortable="sortable"
                                :show-overflow-tooltip="true"
                                header-align="center"/>
 
@@ -115,6 +115,15 @@
     }
   }
   let getList = function (param) {
+    if (!param) {
+      param = {
+        pageNum: this.sheet.pageNum,
+        pageSize: this.sheet.pageSize,
+        sort: this.sheet.sort,
+        order: this.sheet.order,
+        query: this.filters
+      }
+    }
     this.sheet.loading = true
     this.$http.post('/base/productInfo/findPage', param).then(res => {
 
@@ -137,14 +146,7 @@
     methods: {
       search: function () {
         this.sheet.pageNum = 1
-        let param = {
-          pageNum: this.sheet.pageNum,
-          pageSize: this.sheet.pageSize,
-          sort: this.sheet.sort,
-          order: this.sheet.order,
-          query: this.filters
-        }
-        this.getList(param)
+        this.getList()
       },
       handleCommand: function (param) {
         this[param.method](param.args)

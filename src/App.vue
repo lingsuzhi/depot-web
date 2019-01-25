@@ -36,17 +36,14 @@ export default {
 .el-footer{
   padding-top: 10px;
   background: #f2f2f2;
-  height: 60px;
-  position: absolute;
-  width: 85%;
-  bottom: 7px;
+
+  /*position: absolute;*/
+  /*width: 85%;*/
+  /*bottom: 7px;*/
 }
 .el-main {
   text-align: center;
-  padding-left: 0px;
-  padding-top:  0px;
-  padding-right: 0px;
-  padding-bottom: 0px;
+  padding: 0px;
 }
 
 </style>

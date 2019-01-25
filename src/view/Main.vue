@@ -462,7 +462,7 @@
       .content-container {
         flex: 1;
         overflow-y: auto;
-        padding: 20px;
+        padding: 20px 20px 6px;
         .breadcrumb-container {
           .title {
             width: 200px;

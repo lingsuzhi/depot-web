@@ -8,26 +8,24 @@
         <el-table :data="sheet.rows" highlight-current-row v-loading="sheet.loading" stripe="stripe" border="border"
                   @sort-change="sortChange" style="width: 100%;" max-height="690" :row-style="tableRowStyle">
 
-          <el-table-column prop="number" label="编号" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
-                           header-align="center"/>
+<el-table-column prop="number" label="编号" min-width="150" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
 
-          <el-table-column prop="name" label="名称" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
-                           header-align="center"/>
+<el-table-column prop="name" label="名称" min-width="150" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
 
-          <el-table-column prop="phone" label="电话" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
-                           header-align="center"/>
+<el-table-column prop="phone" label="电话" min-width="150" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
 
-          <el-table-column prop="email" label="邮箱" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
-                           header-align="center"/>
+<el-table-column prop="email" label="邮箱" min-width="150" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
 
-          <el-table-column prop="type" label="类别" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
-                           header-align="center"/>
+<el-table-column prop = "type" label = "类别" width = "120" align = "center" >
+  <template slot-scope = "scope" >
+    <el-tag :type = "['','success','info','warning','danger'][['客户','供应商','内部'].indexOf(scope.row.type)%5]" > {{scope.row.type}} </el-tag>
+  </template >
+</el-table-column>
 
-          <el-table-column prop="sort" label="排序" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
-                           header-align="center"/>
+<el-table-column prop="sort" label="排序" min-width="150" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
 
-          <el-table-column prop="remark" label="备注" min-width="160" sortable="sortable" :show-overflow-tooltip="true"
-                           header-align="center"/>
+<el-table-column prop="remark" label="备注" min-width="150" sortable="sortable" :show-overflow-tooltip="true" header-align="center"/>
+
 
 
           <el-table-column prop="createDate" label="时间" width="200" align="center" sortable="sortable"
@@ -113,7 +111,7 @@
         this[param.method](param.args)
       },
       tableRowStyle({row, rowIndex}) {
-        if (row.color) {
+        if (row.color){
           return 'color: ' + row.color;
         }
       },
@@ -150,7 +148,7 @@
         this.$refs.customerInfoEdit.showAdd();
       },
       formatDate: function (d, format) {
-        if (!d) {
+        if(!d){
           return "";
         }
         if (!format) {

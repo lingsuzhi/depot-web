@@ -14,6 +14,24 @@
   <el-input v-model="filters.phone" placeholder="电话" clearable></el-input>
 </el-form-item>
 
+<el-form-item>
+<el-select v-model="filters.type" placeholder="类别">
+<el-option
+:label="''"
+:value="null">
+</el-option>
+<el-option
+:value="'客户'">
+</el-option>
+<el-option
+:value="'供应商'">
+</el-option>
+<el-option
+:value="'内部'">
+</el-option>
+</el-select>
+</el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="search" icon="el-icon-search">查询</el-button>
         <el-button type="warning" @click="add" icon="el-icon-plus">添加</el-button>

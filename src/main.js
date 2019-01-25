@@ -22,6 +22,7 @@ Vue.prototype.$cookies = VueCookies
 import moment from 'moment'
 
 Vue.prototype.$moment = moment
+import './components/ext/directives.js';
 
 import axios from 'axios'
 Vue.prototype.$constants = {
