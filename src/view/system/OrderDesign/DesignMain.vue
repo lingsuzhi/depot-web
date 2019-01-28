@@ -7,16 +7,20 @@
 </template>
 
 <script>
+  import LszCanvas from "@/common/canvas/LszCanvas"
+
   let data = () => {
     return {
-
+      canvas :''
     }
   }
 
   export default {
     data: data,
     components: {},
-
+    mounted: function () {
+      this.canvas = new LszCanvas('myCanvas');
+    }
   }
 </script>
 
