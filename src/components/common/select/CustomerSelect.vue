@@ -135,6 +135,7 @@
         this.visible = false;
       },
       show(){
+        this.search()
         this.visible = true;
       },
       sortChange: function (d) {
@@ -144,7 +145,7 @@
       },
     },
     mounted: function () {
-      this.search()
+
     }
   }
 </script>

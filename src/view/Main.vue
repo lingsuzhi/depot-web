@@ -35,7 +35,9 @@
         <!--导航菜单-->
         <el-menu :default-active="$route.path" class="el-menu-vertical-demo"
                  :style="collapsed ? {'width': '230px'} : {}" unique-opened router v-show="!collapsed">
+          {{dbg(menuData)}}
           <template v-for="(item,index) in menuData" v-if="!item.hidden">
+
             <el-submenu :index="index+''"
                         v-if="!item.leaf">
               <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
@@ -266,6 +268,10 @@
     components: {},
     data: data,
     methods: {
+      dbg(e){
+
+        return
+      },
       getIndex(child) {
         if (child.query) {
           return child.path + child.query;
@@ -293,7 +299,7 @@
         this.dialogTableVisible = false
       }
     },
-    beforeMount() {
+    mounted() {
       this.$http.get('/admin/getCurrentUser', this.form).then(res => {
         if (!res.data.success) {
           return
@@ -301,29 +307,9 @@
         let user = res.data.data
         sessionStorage.setItem('user', JSON.stringify(user))
         this.sysUserName = user.name ? user.name : user.userId
-        // this.initMenu(user)
+        this.initMenu(user)
       }).catch(e => this.logining = false)
     },
-    mounted: function () {
-      var userJson = sessionStorage.getItem('user')
-      if (userJson) {
-        let user = JSON.parse(userJson)
-        this.sysUserName = user.name ? user.name : user.account
-        this.initMenu(user)
-        return
-      }
-      /*
-          this.$http.get('/getCurrentUser', this.form).then(res => {
-            if (!res.data.success) {
-              return
-            }
-            let user = res.data.data
-            sessionStorage.setItem('user', JSON.stringify(user))
-            this.sysUserName = user.name ? user.name : user.account
-            this.initMenu(user)
-          }).catch(e => this.logining = false)
-          */
-    }
   }
 </script>
 <style lang="less">

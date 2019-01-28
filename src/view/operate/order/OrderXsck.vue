@@ -12,7 +12,7 @@
 
       <el-col :span="2">
         <el-tooltip content="编辑" placement="top" effect="light">
-          <el-card :class="!frmDisabled?'lsz-card-disabled':'lsz-card'"  @click.native="cardClick('编辑',$event)"
+          <el-card :class="!frmDisabled?'lsz-card-disabled':'lsz-card'" @click.native="cardClick('编辑',$event)"
                    shadow="frmDisabled?never:hover">
             <i class="el-icon-edit-outline"></i>
 
@@ -22,7 +22,7 @@
 
       <el-col :span="2">
         <el-tooltip content="删除" placement="top" effect="light">
-          <el-card :class="!frmDisabled?'lsz-card-disabled':'lsz-card'"  @click.native="cardClick('删除',$event)"
+          <el-card :class="!frmDisabled?'lsz-card-disabled':'lsz-card'" @click.native="cardClick('删除',$event)"
                    shadow="frmDisabled?never:hover">
             <i class="el-icon-delete"></i>
 
@@ -32,7 +32,7 @@
 
       <el-col :span="2">
         <el-tooltip content="保存" placement="top" effect="light">
-          <el-card :class="frmDisabled?'lsz-card-disabled':'lsz-card'"  @click.native="cardClick('保存',$event)"
+          <el-card :class="frmDisabled?'lsz-card-disabled':'lsz-card'" @click.native="cardClick('保存',$event)"
                    shadow="frmDisabled?never:hover">
             <i class="el-icon-success"></i>
 
@@ -41,8 +41,8 @@
       </el-col>
 
       <el-col :span="2">
-        <el-tooltip content="取消" placement="top"  effect="light">
-          <el-card :class="frmDisabled?'lsz-card-disabled':'lsz-card'"  @click.native="cardClick('取消',$event)"
+        <el-tooltip content="取消" placement="top" effect="light">
+          <el-card :class="frmDisabled?'lsz-card-disabled':'lsz-card'" @click.native="cardClick('取消',$event)"
                    shadow="frmDisabled?never:hover">
             <i class="el-icon-error"></i>
 
@@ -52,7 +52,7 @@
 
       <el-col :span="3">
         <el-tooltip content="前单" placement="top" effect="light">
-          <el-card :class="!frmDisabled?'lsz-card-disabled':'lsz-card'"  @click.native="cardClick('前单',$event)"
+          <el-card :class="!frmDisabled?'lsz-card-disabled':'lsz-card'" @click.native="cardClick('前单',$event)"
                    shadow="frmDisabled?never:hover">
             <i class="el-icon-d-arrow-left"></i>
 
@@ -62,7 +62,7 @@
 
       <el-col :span="3">
         <el-tooltip content="后单" placement="top" effect="light">
-          <el-card :class="!frmDisabled?'lsz-card-disabled':'lsz-card'"  @click.native="cardClick('后单',$event)"
+          <el-card :class="!frmDisabled?'lsz-card-disabled':'lsz-card'" @click.native="cardClick('后单',$event)"
                    shadow="frmDisabled?never:hover">
             <i class="el-icon-d-arrow-right"></i>
 
@@ -72,7 +72,7 @@
 
       <el-col :span="2">
         <el-tooltip content="增行" placement="top" effect="light">
-          <el-card :class="frmDisabled?'lsz-card-disabled':'lsz-card'"  @click.native="cardClick('增行',$event)"
+          <el-card :class="frmDisabled?'lsz-card-disabled':'lsz-card'" @click.native="cardClick('增行',$event)"
                    shadow="frmDisabled?never:hover">
             <i class="el-icon-zoom-in"></i>
           </el-card>
@@ -81,7 +81,7 @@
 
       <el-col :span="2">
         <el-tooltip content="打印" placement="top" effect="light">
-          <el-card class="lsz-card"  @click.native="cardClick('打印',$event)"
+          <el-card class="lsz-card" @click.native="cardClick('打印',$event)"
                    shadow="hover">
             <i class="el-icon-printer"></i>
           </el-card>
@@ -90,7 +90,7 @@
 
       <el-col :span="3">
         <el-tooltip content="设置" placement="top" effect="light">
-          <el-card class="lsz-card"  @click.native="cardClick('设置',$event)"
+          <el-card class="lsz-card" @click.native="cardClick('设置',$event)"
                    shadow="hover">
             <i class="el-icon-setting"></i>
           </el-card>
@@ -162,7 +162,6 @@
     <el-table
       :border="true"
       :data="tableData"
-      stripe
       max-height="605"
       :summary-method="getSummaries"
       :header-cell-style="headerRowClassStyle"
@@ -191,7 +190,7 @@
       <el-table-column prop="content" label="含量" width="120"
                        :show-overflow-tooltip="true" header-align="center"/>
 
-      <el-table-column prop="company" label="单位" width="80"
+      <el-table-column prop="company" label="单位" width="80" align="center"
                        :show-overflow-tooltip="true" header-align="center"/>
 
       <el-table-column prop="proce" label="单价" width="160"
@@ -204,7 +203,8 @@
       <el-table-column prop="count" label="数量" width="160"
                        header-align="center">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.count" class="numberElTxt" :readonly="frmDisabled"/>
+          <el-input-number v-model="scope.row.count" size="mini" :readonly="frmDisabled"/>
+          <!--<el-input v-model="scope.row.count"  class="numberElTxt"   :readonly="frmDisabled"/>-->
         </template>
       </el-table-column>
 
@@ -307,13 +307,12 @@
         // 调用 callback 返回建议列表的数据
         cb(results);
       },
-      cardClick(type,e) {
-        if(e.currentTarget.classList.contains("lsz-card-disabled")){
+      cardClick(type, e) {
+        if (e.currentTarget.classList.contains("lsz-card-disabled")) {
           return;
         }
 
-        switch(type)
-        {
+        switch (type) {
           case '新增':
             this.frmDisabled = false;
             break;
@@ -361,9 +360,9 @@
         this.tableData.push(obj);
       },
       //获取金额
-      getTotal(row){
+      getTotal(row) {
         let total = row.count * row.proce
-        if (isNaN(total)){
+        if (isNaN(total)) {
           total = 0;
         }
         //row.total = total;
@@ -376,16 +375,20 @@
       },
       //删行
       handleDelete(index, row) {
-        this.tableData.splice(index,1)
+        this.tableData.splice(index, 1)
       },
       //合计
       getSummaries(param) {
-        const sumColName =  ['数量','金额'];
+        const sumColName = ['数量', '金额'];
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '合计';
+            return;
+          }
+          if (column.label == '名称'){
+            sums[index] = '共 ' + this.tableData.length + " 条记录";
             return;
           }
           if (!sumColName.includes(column.label)) {

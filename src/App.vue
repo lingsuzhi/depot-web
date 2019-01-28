@@ -46,4 +46,8 @@ export default {
   padding: 0px;
 }
 
+.el-table td{
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
 </style>
