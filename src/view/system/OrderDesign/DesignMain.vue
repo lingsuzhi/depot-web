@@ -18,6 +18,11 @@
   export default {
     data: data,
     components: {},
+    methods:{
+      setType(type){
+        this.canvas.setType(type);
+      }
+    },
     mounted: function () {
       this.canvas = new LszCanvas('myCanvas');
     }

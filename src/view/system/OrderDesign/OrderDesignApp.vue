@@ -2,10 +2,10 @@
   <section>
     <el-container>
       <el-aside width="120px">
-        <DesignLeft/>
+        <DesignLeft @typeSelect="typeSelect"/>
       </el-aside>
-      <el-main style="background: antiquewhite">
-        <DesignMain/>
+      <el-main style="background: #f8f8f8">
+        <DesignMain ref="designMain"/>
       </el-main>
       <el-aside>
         右边
@@ -23,6 +23,11 @@
     components: {
       DesignLeft,
       DesignMain,
+    },
+    methods:{
+      typeSelect(type){
+        this.$refs.designMain.setType(type);
+      }
     },
     name: "OrderDesignApp"
   }

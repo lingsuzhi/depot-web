@@ -1,9 +1,9 @@
 <template>
   <section>
     <el-row v-for="(item,index) in btns" :key="index" style="margin-top: 25px;">
-      <el-button round style="font-size: 18px" type="primary" plain :ref="'countBtn'+index">
+      <button   style="font-size: 16px"     :ref="'countBtn'+index" @mousedown="btnClick(index)">
         {{item}}
-      </el-button>
+      </button>
     </el-row>
   </section>
 </template>
@@ -11,13 +11,19 @@
 <script>
   let data = () => {
     return {
-      btns: [1, 2, 3, 5, 10, 20, 30, 50, 80, 100],
+      btns: ['标签', '表格', '标题', 100],
     }
   }
 
   export default {
     data: data,
     components: {},
+    methods:{
+      btnClick(index){
+        let type = this.btns[index];
+        this.$emit('typeSelect',type)
+      }
+    },
     name: "DesignLeft"
   }
 </script>
