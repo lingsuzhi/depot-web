@@ -77,7 +77,7 @@ export default function LszCanvas(canvasId) {
         return obj;
       }
     }
-  }
+  };
   me.selectObjById = function (id) {
     if (!id) {
       return
@@ -87,12 +87,12 @@ export default function LszCanvas(canvasId) {
       me.selectObj(obj);
 
     }
-  }
+  };
   me.selectObjByPos = function (x, y) {
 
     let obj = me.findFocusByPos(x, y);
     me.selectObj(obj);
-  }
+  };
   me.selectObj = function (focusObj) {
     for (let obj of me.objArr) {
       obj.focus = false;
@@ -116,7 +116,7 @@ export default function LszCanvas(canvasId) {
   };
 
   function getNewId() {
-    if (me.objArr.length == 0) {
+    if (me.objArr.length === 0) {
       return 1;
     }
     let max = 1;
@@ -141,9 +141,16 @@ export default function LszCanvas(canvasId) {
       top: rect.top,
       wid: rect.wid,
       hei: rect.hei,
-      align:"居中",
+      align: "居中",
       text: mouseRect.type,
+      font: {
+        fontFamily: '宋体',
+        fontSize: '16px',
+        color: '#333333',
+        fontWeight: '常规',   // 粗体
+      },
       focus: false,
+      border:0,
       id: getNewId(),
     };
     me.objArr.push(obj);
@@ -163,24 +170,56 @@ export default function LszCanvas(canvasId) {
       }
     }
   };
-  me.canvansDom.onkeyup = function (e) {
-    if (e.key == 'Delete') {
-      for (let index in me.objArr) {
-        let obj = me.objArr[index];
 
-        if (obj.focus) {
-          me.objArr.splice(index, 1);
-          if (me.focusChangeFun) {
-            me.focusChangeFun(null);
-          }
-          me.refresh()
-          break;
-        }
+  me.canvansDom.onkeydown = function (e) {
+    let focusObj = null;
+    let focusIndex = -1;
+    for (let index in me.objArr) {
+      let obj = me.objArr[index];
 
+      if (obj.focus) {
+        focusObj = obj;
+        focusIndex = index;
       }
     }
 
-  }
+    switch (e.key) {
+      case 'Delete':
+        if (focusObj) {
+          me.objArr.splice(focusIndex, 1);
+        }
+        break;
+      case 'ArrowRight':
+        if (focusObj) {
+          focusObj.wid = focusObj.wid + 5;
+        }
+        break;
+      case 'ArrowLeft':
+        if (focusObj) {
+          if (focusObj.wid > 5) {
+            focusObj.wid = focusObj.wid - 5;
+          }
+        }
+        break;
+      case 'ArrowUp':
+        if (focusObj) {
+          focusObj.hei = focusObj.hei + 5;
+        }
+        break;
+      case 'ArrowDown':
+        if (focusObj) {
+          if (focusObj.hei > 5) {
+            focusObj.hei = focusObj.hei - 5;
+          }
+        }
+        break;
+      default:
+        return;
+    }
+    me.refresh()
+  };
+
+
   me.canvansDom.onmousedown = function (e) {
     let x = e.offsetX;
     let y = e.offsetY;
@@ -212,14 +251,14 @@ export default function LszCanvas(canvasId) {
     }
   };
 
-  me.canvansDom.ondblclick = function (e) {
+  me.canvansDom.ondblclick = function () {
     // let x = e.offsetX;
     // let y = e.offsetY;
     let obj = me.findFocus();
     if (obj) {
       me.inputBox(obj);
     }
-  }
+  };
 
   me.canvansDom.onmousemove = function (e) {
     let x = e.offsetX;

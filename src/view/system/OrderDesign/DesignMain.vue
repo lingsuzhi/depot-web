@@ -51,10 +51,14 @@
                   <el-autocomplete :readonly="true"
                     size="mini" v-else-if="querySearch[scope.row.value]" v-model="tableObj[scope.row.value]" @change="txtChange"
                     :fetch-suggestions="querySearch[scope.row.value]"
-                    class="inline-input"
-                  ></el-autocomplete>
+                    class="inline-input">
+                  </el-autocomplete>
 
-                  <el-input size="mini" v-else v-model="tableObj[scope.row.value]" @change="txtChange"></el-input>
+                  <el-input size="mini" v-else-if="scope.row.value==='font'" v-model="tableObj[scope.row.value].fontFamily" :readonly="true" @change="txtChange">
+                    <el-button slot="append" icon="el-icon-setting"   @click="selectFont(tableObj[scope.row.value])"></el-button>
+                  </el-input>
+                  <el-input size="mini" v-else v-model="tableObj[scope.row.value]" @change="txtChange">
+                  </el-input>
                 </template>
               </el-table-column>
             </el-table>
@@ -64,11 +68,14 @@
       </el-col>
 
     </el-row>
+
+    <LszFont ref ="lszFont"></LszFont>
   </section>
 </template>
 
 <script>
   import LszCanvas from "@/common/canvas/LszCanvas"
+  import LszFont from '@/components/common/lsz-font.vue';
 
   let data = () => {
     return {
@@ -91,13 +98,18 @@
 
   export default {
     data: data,
-    components: {},
+    components: {
+      LszFont,
+    },
     methods: {
       setType(type) {
         this.canvas.setType(type);
       },
       txtChange() {
         this.canvas.refresh();
+      },
+      selectFont(font){
+        this.$refs.lszFont.show(font);
       },
       inputBox(obj) {
         this.$prompt('请输入内容', '提示', {
@@ -148,8 +160,16 @@
             value: 'text'
           },
           {
+            key: '边框',
+            value: 'border'
+          },
+          {
             key: '对其',
             value: 'align'
+          },
+          {
+            key: '字体',
+            value: 'font'
           },
         ]
       },

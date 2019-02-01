@@ -12,13 +12,17 @@ export default function CanvasDraw(canvas2d) {
     lineDash: []
   }
 
-  me.rect = function (rect, color) {
+  me.rect = function (rect, color,lineWidth) {
     if (color) {
       ctx.strokeStyle = color;
     } else {
       ctx.strokeStyle = style.strokeStyle;
     }
-    ctx.lineWidth = style.lineWidth;
+    if (lineWidth){
+      ctx.lineWidth = lineWidth;
+    } else{
+      ctx.lineWidth = style.lineWidth;
+    }
     ctx.setLineDash(style.lineDash)
     ctx.strokeRect(rect.left, rect.top, rect.wid, rect.hei);
   }
@@ -34,37 +38,53 @@ export default function CanvasDraw(canvas2d) {
   me.fullRect = function (rect) {
     ctx.fillStyle = style.fillStyle;
     ctx.fillRect(rect.left, rect.top, rect.wid, rect.hei);
-  }
+  };
 
   me.text = function (text, x, y) {
     if (text) {
       txtInit();
       ctx.fillText(text, x, y);
     }
-  }
+  };
+  //画标签
+  me.drawLabel = function (obj) {
+    ctx.fillStyle = obj.font.color;
+    ctx.font = me.fontToStr(obj.font);
+    me.textByRect(obj.text, obj, obj.align);
+    if (obj.border > 0){
+      me.rect(obj,undefined,obj.border)
+    }
+  };
 
-  //不考虑换行 居中对齐
-  me.textByRect = function (text, rect,align) {
+  me.fontToStr = function (font) {
+    let str = font.fontSize;
+    if (font.fontWeight == '粗体') {
+      str += " " + "bold"
+    }
+    str += " " + font.fontFamily;
+    return str;
+  };
+
+  me.textByRect = function (text, rect, align) {
     if (text) {
-      txtInit();
-let x = rect.left + (rect.wid / 2);
-let y = (rect.hei) / 2 + rect.top + 5;
-        switch (align) {
-          case "左对齐":
-            ctx.textAlign = 'left';
-            x = rect.left + 2
-            break
-          case "居中":
-            ctx.textAlign = 'center';
-            break;
+      let x = rect.left + (rect.wid / 2);
+      let y = (rect.hei) / 2 + rect.top + 5;
+      switch (align) {
+        case "左对齐":
+          ctx.textAlign = 'left';
+          x = rect.left + 2
+          break
+        case "居中":
+          ctx.textAlign = 'center';
+          break;
 
-          case "右对齐":
-            ctx.textAlign = 'right';
-            x = rect.left + rect.wid - 2;
-            break;
-        }
+        case "右对齐":
+          ctx.textAlign = 'right';
+          x = rect.left + rect.wid - 2;
+          break;
+      }
 
-      ctx.fillText(text, x, y);
+      ctx.fillText(me.findmaxStr(text,rect.wid), x, y);
     }
   }
 
@@ -74,10 +94,10 @@ let y = (rect.hei) / 2 + rect.top + 5;
     }
     switch (obj.type) {
       case "标签":
-        me.textByRect(obj.text, obj,obj.align)
+        me.drawLabel(obj)
         break;
       case "表格":
-        me.textByRect(obj.text, obj)
+        me.text(obj.text, obj.left, obj.top)
 
         break;
     }
@@ -89,10 +109,27 @@ let y = (rect.hei) / 2 + rect.top + 5;
 
   function txtInit() {
     ctx.fillStyle = "#333333";
-    ctx.font = "16px Arial";
+    ctx.font = "16px 宋体";
     ctx.textAlign = 'left';
   }
 
+  me.findmaxStr = function (text, maxWidth) {
+    let arrText = text.split('');
+    let line = '';
+
+    for (let n = 0; n < arrText.length; n++) {
+      let testLine = line + arrText[n];
+      let metrics = ctx.measureText(testLine);
+      let testWidth = metrics.width;
+      if (testWidth > maxWidth) {
+        return line;
+      } else {
+        line = testLine;
+      }
+
+    }
+    return text;
+  }
   //自动换行
   me.wrapText = function (text, x, y, maxWidth) {
     if (typeof text != 'string' || typeof x != 'number' || typeof y != 'number') {
