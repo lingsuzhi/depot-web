@@ -7,9 +7,6 @@
       <el-main style="background: #f8f8f8">
         <DesignMain ref="designMain"/>
       </el-main>
-      <el-aside>
-        右边
-      </el-aside>
     </el-container>
 
   </section>

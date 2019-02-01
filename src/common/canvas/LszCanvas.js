@@ -1,4 +1,4 @@
-import {newCtx, posToRect} from "./CanvasUtil"
+import {newCtx, posToRect, posInRect} from "./CanvasUtil"
 import CanvasDraw from "./CanvasDraw"
 
 export default function LszCanvas(canvasId) {
@@ -9,6 +9,11 @@ export default function LszCanvas(canvasId) {
   me.width = me.canvansDom.clientWidth;
   me.height = me.canvansDom.clientHeight;
   me.buff = newCtx(me.width, me.height);
+  //焦点变更回调
+  me.focusChangeFun = null;
+  //输入框
+  me.inputBox = null;
+
   let draw = new CanvasDraw(me.buff);
 
   me.mouseRect = {
@@ -17,14 +22,21 @@ export default function LszCanvas(canvasId) {
     y1: 0,
     x2: 0,
     y2: 0,
+    moveObj: {
+      offX: 0,
+      offY: 0,
+      obj: null,
+      oldLeft: 0,
+      oldTop: 0
+    },
     getRect: function () {
       return posToRect(this.x1, this.y1, this.x2, this.y2);
     }
-  }
+  };
 
   me.setType = function (type) {
     me.mouseRect.type = type;
-  }
+  };
 
   me.refresh = function () {
     me.buff.clearRect(0, 0, me.width, me.height);
@@ -33,14 +45,17 @@ export default function LszCanvas(canvasId) {
 
     let imgData = me.buff.getImageData(0, 0, me.width, me.height);
     me.ctx.putImageData(imgData, 0, 0);
-  }
+  };
 
   //鼠标矩形
   me.mouseRectDraw = function () {
     if (me.mouseRect.type) {
       switch (me.mouseRect.type) {
         case 'mouse':
-          draw.rectByLineDash(me.mouseRect.getRect(), [4, 6])
+          draw.rectByLineDash(me.mouseRect.getRect(), [4, 6]);
+          break;
+        case 'move':
+
           break;
         default:
           let rect = {
@@ -48,40 +63,69 @@ export default function LszCanvas(canvasId) {
             top: me.mouseRect.y2 - 15,
             wid: 100,
             hei: 30
-          }
-          draw.textByRect(me.mouseRect.type, rect)
-          draw.rect(rect)
+          };
+          draw.textByRect(me.mouseRect.type, rect);
+          draw.rect(rect);
           break
       }
     }
 
-  }
-
-  me.selectObj=function(x,y){
+  };
+  me.findObjById = function (id) {
     for (let obj of me.objArr) {
-      obj.focus = false;
-    }
-    let obj = me.findFocusByPos(x,y);
-    if (obj){
-      obj.focus = true;
-    }
-  }
-
-  me.selectObjFocus = function(selectObj){
-    for (let obj of me.objArr) {
-      obj.focus = false;
-    }
-    selectObj.focus = true;
-  }
-
-  me.findFocusByPos = function(x,y){
-    for (let obj of me.objArr) {
-
-      if (x > obj.left && x < (obj.left + obj.wid)
-        && y > obj.top && y < (obj.top + obj.hei)) {
+      if (obj.id === id) {
         return obj;
       }
     }
+  }
+  me.selectObjById = function (id) {
+    if (!id) {
+      return
+    }
+    let obj = me.findObjById(id);
+    if (obj.focus !== true) {
+      me.selectObj(obj);
+
+    }
+  }
+  me.selectObjByPos = function (x, y) {
+
+    let obj = me.findFocusByPos(x, y);
+    me.selectObj(obj);
+  }
+  me.selectObj = function (focusObj) {
+    for (let obj of me.objArr) {
+      obj.focus = false;
+    }
+    if (focusObj) {
+      focusObj.focus = true;
+    }
+    //为Null 也要掉用
+    if (me.focusChangeFun) {
+      me.focusChangeFun(focusObj);
+    }
+    me.refresh()
+  };
+
+  me.findFocusByPos = function (x, y) {
+    for (let obj of me.objArr) {
+      if (posInRect(x, y, obj)) {
+        return obj;
+      }
+    }
+  };
+
+  function getNewId() {
+    if (me.objArr.length == 0) {
+      return 1;
+    }
+    let max = 1;
+    for (let obj of me.objArr) {
+      if (obj.id > max) {
+        max = obj.id;
+      }
+    }
+    return max + 1;
   }
 
   me.pushObj = function (mouseRect) {
@@ -90,53 +134,115 @@ export default function LszCanvas(canvasId) {
       top: mouseRect.y2 - 15,
       wid: 100,
       hei: 30
-    }
+    };
     let obj = {
       type: mouseRect.type,
       left: rect.left,
       top: rect.top,
       wid: rect.wid,
       hei: rect.hei,
-      text:mouseRect.type,
+      align:"居中",
+      text: mouseRect.type,
       focus: false,
-    }
-    me.objArr.push(obj)
+      id: getNewId(),
+    };
+    me.objArr.push(obj);
     return obj;
-  }
+  };
 
   me.refreshEx = function (arr) {
     for (let obj of arr) {
-        draw.display(obj)
+      draw.display(obj)
     }
-  }
+  };
 
+  me.findFocus = function () {
+    for (let obj of me.objArr) {
+      if (obj.focus) {
+        return obj;
+      }
+    }
+  };
+  me.canvansDom.onkeyup = function (e) {
+    if (e.key == 'Delete') {
+      for (let index in me.objArr) {
+        let obj = me.objArr[index];
+
+        if (obj.focus) {
+          me.objArr.splice(index, 1);
+          if (me.focusChangeFun) {
+            me.focusChangeFun(null);
+          }
+          me.refresh()
+          break;
+        }
+
+      }
+    }
+
+  }
   me.canvansDom.onmousedown = function (e) {
     let x = e.offsetX;
     let y = e.offsetY;
-    if (e.buttons == 1) {
+    if (e.buttons === 1) {
       //左键
-      me.mouseRect.type = 'mouse';
-      me.mouseRect.x1 = x;
-      me.mouseRect.y1 = y;
+      let obj = me.findFocus();
+      if (obj && posInRect(x, y, obj)) {
+        me.mouseRect.type = 'move';
+        me.mouseRect.moveObj.obj = obj;
 
-      me.mouseRect.x2 = me.mouseRect.x1;
-      me.mouseRect.y2 = me.mouseRect.y1;
+        me.mouseRect.moveObj.offX = x - obj.left;
+        me.mouseRect.moveObj.offY = y - obj.top;
+        me.mouseRect.moveObj.oldLeft = obj.left;
+        me.mouseRect.moveObj.oldTop = obj.top;
 
+        if (me.mouseRect.moveObj.offX < 0 || me.mouseRect.moveObj.offY < 0 || me.mouseRect.moveObj.offY > obj.hei || me.mouseRect.moveObj.offX > obj.wid) {
+          me.mouseRect.type = '';
+        }
+      } else {
+        me.mouseRect.type = 'mouse';
+        me.mouseRect.x1 = x;
+        me.mouseRect.y1 = y;
+
+        me.mouseRect.x2 = me.mouseRect.x1;
+        me.mouseRect.y2 = me.mouseRect.y1;
+
+      }
+
+    }
+  };
+
+  me.canvansDom.ondblclick = function (e) {
+    // let x = e.offsetX;
+    // let y = e.offsetY;
+    let obj = me.findFocus();
+    if (obj) {
+      me.inputBox(obj);
     }
   }
 
   me.canvansDom.onmousemove = function (e) {
     let x = e.offsetX;
     let y = e.offsetY;
-    if (e.buttons == 1) {
+    if (e.buttons === 1) {
       //左键
+      me.mouseRect.x2 = x;
+      me.mouseRect.y2 = y;
       if (me.mouseRect.type) {
-        me.mouseRect.x2 = x;
-        me.mouseRect.y2 = y;
+        switch (me.mouseRect.type) {
+          case 'mouse':
+
+            break;
+          case 'move':
+
+            me.mouseRect.moveObj.obj.left = x - me.mouseRect.moveObj.offX;
+            me.mouseRect.moveObj.obj.top = y - me.mouseRect.moveObj.offY;
+            break;
+        }
       }
     }
     me.refresh();
-  }
+  };
 
   me.canvansDom.onmouseup = function (e) {
     let x = e.offsetX;
@@ -146,19 +252,22 @@ export default function LszCanvas(canvasId) {
     if (me.mouseRect.type) {
       switch (me.mouseRect.type) {
         case 'mouse':
-            me.selectObj(x,y);
+          me.selectObjByPos(x, y);
 
 
-          break
+          break;
+        case 'move':
+
+          break;
         default:
           me.pushObj(me.mouseRect);
       }
 
 
       me.mouseRect.type = '';
-    }else{
+    } else {
 
     }
     me.refresh();
-  }
+  };
 }

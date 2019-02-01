@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-loading="frmLoadding" element-loading-background="rgba(0, 0, 0, 0)">
     <el-row :gutter="12">
       <el-col :span="3">
         <el-tooltip content="新增" placement="top" effect="light">
@@ -102,7 +102,7 @@
       <el-row>
         <el-col :span="10">
           <el-form-item label="单号">
-            <el-input :readonly="true" v-model="from.number"></el-input>
+            <el-input :readonly="true" v-model="from.uuid"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="5" align="left">
@@ -231,7 +231,7 @@
 <script>
   import CustomerSelect from '@/components/common/select/CustomerSelect.vue';
   import ProductSelect from '@/components/common/select/ProductSelect.vue';
-  import {newOrderNumber, saveOrder, findByDayMax} from "./orderFace"
+  import {newOrderNumber, saveOrder, findByDayMax,delOrder,moveOrder} from "./orderFace"
 
   export default {
     components: {
@@ -242,6 +242,7 @@
     data() {
       return {
         state1: '',
+        frmLoadding:false,
         frmDisabled: true,
         type: 'XS',
         from: {
@@ -282,8 +283,17 @@
           case '编辑':
             this.frmDisabled = false;
             break;
+          case '删除':
+            delOrder(this)
+            break;
           case '增行':
             this.showProductSelect();
+            break;
+          case '前单':
+            moveOrder(this,'leftOrder');
+            break;
+          case '后单':
+            moveOrder(this,'rightOrder');
             break;
           case '取消':
             this.frmDisabled = true;
@@ -334,7 +344,16 @@
       },
       //选择商品窗口回调
       productDo(row) {
-        let obj = Object.assign({}, row)
+        let obj = {
+          number: row.number,
+          name: row.name,
+          spec: row.spec,
+          content: row.content,
+          company: row.company,
+          proce: row.proce,
+          count: row.count,
+          total: row.total,
+        }
 
         this.tableData.push(obj);
       },

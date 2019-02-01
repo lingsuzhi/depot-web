@@ -29,3 +29,9 @@ export function posToRect(xx1, yy1, xx2, yy2) {
   obj.hei = y2 - y1;
   return obj;
 }
+
+export function posInRect(x, y, rect) {
+  return (x > rect.left && x < (rect.left + rect.wid)
+    && y > rect.top && y < (rect.top + rect.hei));
+
+};

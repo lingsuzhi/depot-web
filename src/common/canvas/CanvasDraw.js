@@ -44,11 +44,27 @@ export default function CanvasDraw(canvas2d) {
   }
 
   //不考虑换行 居中对齐
-  me.textByRect = function (text, rect) {
+  me.textByRect = function (text, rect,align) {
     if (text) {
       txtInit();
-      ctx.textAlign = 'center';
-      ctx.fillText(text, rect.left + (rect.wid / 2), (rect.hei) / 2 + rect.top + 5);
+let x = rect.left + (rect.wid / 2);
+let y = (rect.hei) / 2 + rect.top + 5;
+        switch (align) {
+          case "左对齐":
+            ctx.textAlign = 'left';
+            x = rect.left + 2
+            break
+          case "居中":
+            ctx.textAlign = 'center';
+            break;
+
+          case "右对齐":
+            ctx.textAlign = 'right';
+            x = rect.left + rect.wid - 2;
+            break;
+        }
+
+      ctx.fillText(text, x, y);
     }
   }
 
@@ -58,11 +74,12 @@ export default function CanvasDraw(canvas2d) {
     }
     switch (obj.type) {
       case "标签":
-        me.textByRect(obj.text, obj)
+        me.textByRect(obj.text, obj,obj.align)
+        break;
       case "表格":
         me.textByRect(obj.text, obj)
 
-        break
+        break;
     }
 
     if (obj.focus) {
